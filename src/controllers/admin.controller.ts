@@ -1,62 +1,65 @@
-import { ObjectId } from "mongodb";
 import { adminModel } from "@db/index.db";
+import { verifyHash } from "@libs/bcrypt";
+import { adminId, isProduction } from "@config";
+import { signToken } from "@libs/jsonwebtoken";
+import { ObjectId } from "mongodb";
 import type { Request, Response } from "express";
 
-const ADMIN_COOKIE = "";
+const ADMIN_COOKIE = "admin-session";
 async function authAdmin(req: Request, res: Response) {
-  const formData = req.body;
-  const { username, password } = Object.fromEntries(formData);
+  const { username, password } = req.body;
 
-  if (!username.toString().trim() || !password.toString().trim())
-    return res
+  if (!username.toString().trim() || !password.toString().trim()) {
+    res
       .json({
         message: "¡Debes enviar una contraseña y un usuario!",
       })
       .status(400);
+    return;
+  }
 
-  const adminId = process.env.ADMIN_ID ?? "";
-  const adminUser = await adminModel.findOne({
-    _id: new ObjectId(adminId),
-  });
-  if (!adminUser)
-    return {
-      error: true,
-      message: "¡Solo el administrador tiene acceso!",
-    };
-  const matchPass = await verifyPassword(
-    password.toString(),
-    adminUser.password
-  );
-  const matchUser = await verifyPassword(
-    username.toString(),
-    adminUser.username
-  );
-  if (!matchPass || !matchUser)
-    return {
-      error: true,
-      message: "¡Solo el administrador tiene acceso!",
-    };
+  try {
+    const adminUser = await adminModel.findOne({
+      _id: new ObjectId(adminId),
+    });
+    if (!adminUser) {
+      res
+        .json({
+          message: "¡Solo el administrador tiene acceso!",
+        })
+        .status(401);
+      return;
+    }
+    const matchPass = await verifyHash(password.toString(), adminUser.password);
+    const matchUser = await verifyHash(username.toString(), adminUser.username);
+    if (!matchPass || !matchUser) {
+      res
+        .json({
+          message: "¡Solo el administrador tiene acceso!",
+        })
+        .status(401);
 
-  const jwtPrivate = process.env.PRIVATE_KEY ?? "";
-  const token = jwt.sign({ created_at: new Date() }, jwtPrivate, {
-    expiresIn: Date.now() + 7 * 24 * 60 * 60 * 1000,
-  });
+      return;
+    }
 
-  const cookieStore = await obtainCookiesStore();
+    const token = signToken({ created_at: new Date() });
 
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  cookieStore.set(ADMIN_COOKIE, token, {
-    httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: "lax",
-    path: "/",
-  });
-
-  return {
-    error: false,
-    message: "¡Bienvenido Nicolás!",
-  };
+    const maxAge = 60 * 60 * 1000; // ONE HOUR
+    res
+      .cookie(ADMIN_COOKIE, token, {
+        httpOnly: true,
+        secure: isProduction,
+        maxAge,
+        sameSite: "lax",
+        path: "/",
+      })
+      .json({
+        message: "¡Bienvenido Nicolás!",
+      });
+  } catch (e) {
+    console.log(e);
+    res.json({ message: "Error en el servidor" }).status(500);
+  }
 }
 
 export { authAdmin };

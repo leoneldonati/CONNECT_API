@@ -6,11 +6,12 @@
     "dev": "node --watch --import=tsx src/index.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "@_leodonati",
   "license": "ISC",
   "type": "module",
   "description": "",
   "dependencies": {
+    "bcrypt": "5.1.1",
     "cors": "2.8.5",
     "dotenv": "16.5.0",
     "express": "5.1.0",
@@ -18,9 +19,12 @@
     "mongodb": "6.16.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "5.0.2",
     "@types/cors": "2.8.18",
     "@types/express": "5.0.1",
+    "@types/jsonwebtoken": "9.0.9",
     "@types/node": "22.15.17",
+    "morgan": "1.10.0",
     "tsx": "4.19.4"
   }
 }

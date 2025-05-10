@@ -1,4 +1,4 @@
-import { dbConfig } from "@config";
+import { dbConfig, isProduction } from "@config";
 import { MongoClient, type MongoClientOptions } from "mongodb";
 
 const { dbName, dbPass } = dbConfig;
@@ -10,6 +10,8 @@ const client = new MongoClient(url, {
 } as MongoClientOptions);
 
 await client.connect();
+
+!isProduction && console.log("CONNECTED ON DB:", dbName);
 
 const productsModel = client.db(dbName).collection("products");
 

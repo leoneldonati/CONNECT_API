@@ -9,5 +9,6 @@ const dbConfig = {
   dbPass: process.env.DB_PASS,
   dbName: process.env.DB_NAME,
 };
+const jwtSecret = process.env.JWT_SECRET;
 
-export { port, isProduction, adminId, dbConfig };
+export { port, isProduction, adminId, dbConfig, jwtSecret };
