@@ -2,7 +2,7 @@ import { config } from "dotenv";
 
 config();
 
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 const isProduction = process.env.NODE_ENV === "production";
 const adminId = process.env.ADMIN_ID;
 const dbConfig = {
@@ -10,5 +10,6 @@ const dbConfig = {
   dbName: process.env.DB_NAME,
 };
 const jwtSecret = process.env.JWT_SECRET;
+const ADMIN_COOKIE = "admin-session";
 
-export { port, isProduction, adminId, dbConfig, jwtSecret };
+export { port, isProduction, adminId, dbConfig, jwtSecret, ADMIN_COOKIE };

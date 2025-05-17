@@ -1,11 +1,10 @@
-import { adminModel } from "@db/index.db";
-import { verifyHash } from "@libs/bcrypt";
-import { adminId, isProduction } from "@config";
-import { signToken } from "@libs/jsonwebtoken";
+import { adminModel } from "@db/index.db.js";
+import { verifyHash } from "@libs/bcrypt.js";
+import { ADMIN_COOKIE, adminId, isProduction } from "@config.js";
+import { signToken } from "@libs/jsonwebtoken.js";
 import { ObjectId } from "mongodb";
 import type { Request, Response } from "express";
 
-const ADMIN_COOKIE = "admin-session";
 async function authAdmin(req: Request, res: Response) {
   const { username, password } = req.body;
 
@@ -42,20 +41,18 @@ async function authAdmin(req: Request, res: Response) {
       return;
     }
 
-    const token = signToken({ created_at: new Date() });
+    const token = signToken({ role: "admin" });
 
     const maxAge = 60 * 60 * 1000; // ONE HOUR
     res
       .cookie(ADMIN_COOKIE, token, {
-        httpOnly: true,
+        httpOnly: isProduction,
         secure: isProduction,
         maxAge,
         sameSite: "lax",
-        path: "/",
       })
       .json({
         message: "¡Bienvenido Nicolás!",
-        token,
       });
   } catch (e) {
     console.log(e);

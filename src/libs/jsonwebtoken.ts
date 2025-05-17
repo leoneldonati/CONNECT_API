@@ -1,4 +1,4 @@
-import { jwtSecret } from "@config";
+import { jwtSecret } from "@config.js";
 import jwt from "jsonwebtoken";
 
 function signToken(payload: string | object | Buffer) {
@@ -12,7 +12,7 @@ function verifyToken(token: string) {
   const verifiedToken = jwt.verify(token, jwtSecret);
   if (!verifiedToken) return false;
 
-  return true;
+  return verifiedToken;
 }
 
 export { signToken, verifyToken };

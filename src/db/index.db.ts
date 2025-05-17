@@ -1,4 +1,4 @@
-import { dbConfig, isProduction } from "@config";
+import { dbConfig, isProduction } from "@config.js";
 import { MongoClient, type MongoClientOptions } from "mongodb";
 
 const { dbName, dbPass } = dbConfig;

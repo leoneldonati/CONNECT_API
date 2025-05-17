@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { authAdmin } from "@controllers/admin.controller";
+import { authAdmin } from "@controllers/admin.controller.js";
 
 const adminRouter = Router();
 
 adminRouter.post("/admin", authAdmin);
 
-export { adminRouter };
+export default adminRouter;
