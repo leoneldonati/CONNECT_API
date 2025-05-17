@@ -8,11 +8,9 @@ async function authAdmin(req, res) {
   const { username, password } = req.body;
 
   if (!username.toString().trim() || !password.toString().trim()) {
-    res
-      .json({
-        message: "¡Debes enviar una contraseña y un usuario!",
-      })
-      .status(400);
+    res.status(400).json({
+      message: "¡Debes enviar una contraseña y un usuario!",
+    });
     return;
   }
 
@@ -21,21 +19,17 @@ async function authAdmin(req, res) {
       _id: new ObjectId(adminId),
     });
     if (!adminUser) {
-      res
-        .json({
-          message: "¡Solo el administrador tiene acceso!",
-        })
-        .status(401);
+      res.status(401).json({
+        message: "¡Solo el administrador tiene acceso!",
+      });
       return;
     }
     const matchPass = await verifyHash(password.toString(), adminUser.password);
     const matchUser = await verifyHash(username.toString(), adminUser.username);
     if (!matchPass || !matchUser) {
-      res
-        .json({
-          message: "¡Solo el administrador tiene acceso!",
-        })
-        .status(401);
+      res.status(401).json({
+        message: "¡Solo el administrador tiene acceso!",
+      });
 
       return;
     }
@@ -55,7 +49,7 @@ async function authAdmin(req, res) {
       });
   } catch (e) {
     console.log(e);
-    res.json({ message: "Error en el servidor" }).status(500);
+    res.status(500).json({ message: "Error en el servidor" });
   }
 }
 
