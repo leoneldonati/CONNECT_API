@@ -1,6 +1,5 @@
-import { productsModel } from "@db/index.db.js";
-import type { Request, Response } from "express";
-async function getProducts(req: Request, res: Response) {
+import { productsModel } from "../db/index.db.js";
+async function getProducts(req, res) {
   const queryParams = req.query;
 
   if (!queryParams?.q) {

@@ -2,11 +2,11 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import { isProduction, port } from "@config.js";
-import { checkAllowedOrigin } from "@helpers/origins.js";
-import adminRouter from "@routes/admin.js";
-import { verifySession } from "@middlewares/auth.js";
-import productRouter from "@routes/products.js";
+import { isProduction, port } from "./config.js";
+import { checkAllowedOrigin } from "./helpers/origins.js";
+import adminRouter from "./routes/admin.js";
+import { verifySession } from "./middlewares/auth.js";
+import productRouter from "./routes/products.js";
 
 const app = express();
 

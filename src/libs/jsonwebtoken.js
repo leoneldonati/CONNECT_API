@@ -1,14 +1,14 @@
-import { jwtSecret } from "@config.js";
+import { jwtSecret } from "../config.js";
 import jwt from "jsonwebtoken";
 
-function signToken(payload: string | object | Buffer) {
+function signToken(payload) {
   const oneHour = 3600;
-  const signConfig: jwt.SignOptions = {
+  const signConfig = {
     expiresIn: oneHour,
   };
   return jwt.sign(payload, jwtSecret, signConfig);
 }
-function verifyToken(token: string) {
+function verifyToken(token) {
   const verifiedToken = jwt.verify(token, jwtSecret);
   if (!verifiedToken) return false;
 

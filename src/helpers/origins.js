@@ -1,7 +1,6 @@
 const WHITE_LIST = []; // TODO: agregar los orígenes permitidos
 
-type CALLBACK = (err: Error | null, origin?: any) => void;
-function checkAllowedOrigin(origin: string, cb: CALLBACK): void {
+function checkAllowedOrigin(origin, cb) {
   const isAllowed = WHITE_LIST.includes(origin);
 
   if (!isAllowed && WHITE_LIST.length > 0) {

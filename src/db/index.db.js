@@ -1,5 +1,5 @@
-import { dbConfig, isProduction } from "@config.js";
-import { MongoClient, type MongoClientOptions } from "mongodb";
+import { dbConfig, isProduction } from "../config.js";
+import { MongoClient } from "mongodb";
 
 const { dbName, dbPass } = dbConfig;
 const url = `mongodb+srv://leonelroman:${dbPass}@cluster0.fo3dmlm.mongodb.net/?w=majority`;
@@ -7,7 +7,7 @@ const url = `mongodb+srv://leonelroman:${dbPass}@cluster0.fo3dmlm.mongodb.net/?w
 const client = new MongoClient(url, {
   retryWrites: true,
   appName: "Cluster0",
-} as MongoClientOptions);
+});
 
 await client.connect();
 

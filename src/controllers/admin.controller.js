@@ -1,11 +1,10 @@
-import { adminModel } from "@db/index.db.js";
-import { verifyHash } from "@libs/bcrypt.js";
-import { ADMIN_COOKIE, adminId, isProduction } from "@config.js";
-import { signToken } from "@libs/jsonwebtoken.js";
+import { adminModel } from "../db/index.db.js";
+import { verifyHash } from "../libs/bcrypt.js";
+import { ADMIN_COOKIE, adminId, isProduction } from "../config.js";
+import { signToken } from "../libs/jsonwebtoken.js";
 import { ObjectId } from "mongodb";
-import type { Request, Response } from "express";
 
-async function authAdmin(req: Request, res: Response) {
+async function authAdmin(req, res) {
   const { username, password } = req.body;
 
   if (!username.toString().trim() || !password.toString().trim()) {
