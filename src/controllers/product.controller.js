@@ -1,4 +1,6 @@
 import { productsModel } from "../db/index.db.js";
+import { deleteFile } from "../libs/cloudinary.js";
+import { Validate } from "../libs/zod.js";
 async function getProducts(req, res) {
   const queryParams = req.query;
 
@@ -33,4 +35,48 @@ async function getProducts(req, res) {
   }
 }
 
-export { getProducts };
+async function deleteProduct(req, res) {
+  const queryParams = req.query;
+
+  const wrongParams = !queryParams?.id || !queryParams?.publicId;
+  if (wrongParams) {
+    res.status(400).json({
+      message: "Debes enviar el id y el publicId en los query params.",
+    });
+    return;
+  }
+
+  try {
+    await productsModel.findOneAndDelete({ _id: queryParams.id });
+    await deleteFile(queryParams.publicId);
+
+    res.json({ message: "Producto eliminado." });
+  } catch (e) {
+    res.status(500).json({ message: "Error en el servidor." });
+  }
+}
+
+async function uploadProduct(req, res) {
+  const { validate } = new Validate("product");
+
+  const { success, data, errors } = validate(req.body);
+
+  if (!success) {
+    res
+      .status(400)
+      .json({ message: "Error al validar los datos enviados.", errors });
+    return;
+  }
+
+  try {
+    const {
+      title,
+      description,
+      wholesale_price,
+      retail_price,
+      in_stock,
+      stock_count,
+    } = data;
+  } catch {}
+}
+export { getProducts, deleteProduct, uploadProduct };

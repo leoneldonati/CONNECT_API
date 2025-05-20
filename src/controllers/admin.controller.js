@@ -46,6 +46,7 @@ async function authAdmin(req, res) {
       })
       .json({
         message: "¡Bienvenido Nicolás!",
+        token,
       });
   } catch (e) {
     console.log(e);

@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: checkAllowedOrigin }));
 app.use(cookieParser());
 
-app.use(verifySession);
+// app.use(verifySession);
 // RUTAS
 app.use(adminRouter);
 app.use(productRouter);
